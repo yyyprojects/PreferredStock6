@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: A Guide to Preferred Stock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Energetic & Playful -->
+    <!-- Application Structure Plan: A top-to-bottom narrative infographic. It starts with a simple definition (The Hybrid), moves to hierarchical organization (The Pecking Order), then direct comparison (The Showdown), followed by a balanced analysis for the user (Investor's Toolkit), a breakdown of options (Spectrum of Choices), and finally the corporate perspective (Why Issue It?). This logical flow guides a novice user from basic concepts to more complex details in a digestible, visually-driven sequence. -->
+    <!-- Visualization & Content Choices: 1. Liquidation Priority -> Goal: Organize -> Viz: HTML/CSS Pyramid -> Justification: Instantly communicates hierarchy, more effective than a list. NO SVG. 2. Comparison vs. Common/Bonds -> Goal: Compare -> Viz: Chart.js Bar Chart -> Justification: Ideal for comparing multiple entities across fixed criteria (Risk, Income, Growth). NO SVG. 3. Investor Pros/Cons -> Goal: Compare -> Viz: Two-column HTML/CSS list with icons -> Justification: Classic, scannable infographic layout for balanced arguments. NO SVG. 4. Types of Preferreds -> Goal: Compare/Organize -> Viz: Chart.js Horizontal Bar Chart -> Justification: Visually demonstrates the inverse relationship between investor-friendly features and yield, a key report insight. NO SVG. 5. Corporate Reasons -> Goal: Inform -> Viz: HTML/CSS styled cards -> Justification: Breaks down complex corporate strategies into simple, digestible points. NO SVG. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F8F9FA;
+            color: #343a40;
+        }
+        .bg-primary { background-color: #00AEEF; }
+        .text-primary { color: #00AEEF; }
+        .border-primary { border-color: #00AEEF; }
+        .bg-accent-magenta { background-color: #EC008C; }
+        .text-accent-magenta { color: #EC008C; }
+        .bg-accent-purple { background-color: #662D91; }
+        .text-accent-purple { color: #662D91; }
+        .bg-accent-yellow { background-color: #FFF200; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 50vh;
+        }
+        .pyramid-level {
+            clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%);
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .pyramid-level:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+        .pro-con-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .pro-con-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-12">
+
+        <header class="text-center mb-20">
+            <h1 class="text-4xl md:text-6xl font-bold text-accent-purple mb-4">The Investor's Guide to</h1>
+            <h2 class="text-5xl md:text-7xl font-bold bg-primary text-white inline-block px-4 py-2 rounded-lg shadow-lg">Preferred Stock</h2>
+            <p class="max-w-2xl mx-auto mt-6 text-lg text-gray-600">It's not quite a stock, not quite a bond. Welcome to the world of the hybrid investment, designed for income, stability, and a unique place in the market.</p>
+        </header>
+
+        <section id="pecking-order" class="mb-24">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-accent-purple">The Pecking Order</h3>
+                <p class="text-gray-600 max-w-xl mx-auto">If a company goes bankrupt, here's who gets paid first. This hierarchy is crucial to understanding risk.</p>
+            </div>
+            <div class="max-w-sm mx-auto space-y-1 text-center text-white font-semibold">
+                <div class="pyramid-level bg-primary p-4 rounded-t-lg shadow-md">
+                    <span class="text-2xl">🥇</span>
+                    <h4 class="text-xl">Bondholders (Creditors)</h4>
+                    <p class="text-sm font-normal">Highest Priority - Paid First</p>
+                </div>
+                <div class="pyramid-level bg-accent-purple p-4 shadow-md">
+                    <span class="text-2xl">🥈</span>
+                    <h4 class="text-xl">Preferred Stockholders</h4>
+                    <p class="text-sm font-normal">Middle Priority - Paid After Bonds</p>
+                </div>
+                <div class="pyramid-level bg-accent-magenta p-4 rounded-b-lg shadow-md">
+                    <span class="text-2xl">🥉</span>
+                    <h4 class="text-xl">Common Stockholders</h4>
+                    <p class="text-sm font-normal">Lowest Priority - Paid Last (If Anything)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="showdown" class="mb-24">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-accent-purple">The Showdown</h3>
+                <p class="text-gray-600 max-w-xl mx-auto">How does preferred stock stack up against its financial cousins? This chart compares them on the factors that matter most to investors.</p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <div class="chart-container">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="pros-cons" class="mb-24">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-accent-purple">The Investor's Toolkit</h3>
+                <p class="text-gray-600 max-w-xl mx-auto">Every investment has trade-offs. Here’s a balanced look at the benefits and risks of adding preferred stock to your portfolio.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="pro-con-card bg-white p-8 rounded-xl shadow-lg border-t-4 border-primary">
+                    <h4 class="text-2xl font-bold text-primary mb-4">Why You Might Love It (Pros)</h4>
+                    <ul class="space-y-4 text-gray-700">
+                        <li class="flex items-start"><span class="text-2xl mr-3">💰</span><div><strong class="font-semibold">High, Steady Income:</strong> Often provides higher and more predictable dividend yields than common stocks.</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">🛡️</span><div><strong class="font-semibold">Priority Protection:</strong> You get paid dividends and assets in liquidation before common shareholders.</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">📉</span><div><strong class="font-semibold">Lower Volatility:</strong> Tends to have more stable prices compared to the ups and downs of common stock.</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">🧾</span><div><strong class="font-semibold">Tax Advantages:</strong> Dividends often qualify for lower capital gains tax rates, boosting your after-tax return.</div></li>
+                    </ul>
+                </div>
+                <div class="pro-con-card bg-white p-8 rounded-xl shadow-lg border-t-4 border-accent-magenta">
+                    <h4 class="text-2xl font-bold text-accent-magenta mb-4">What to Watch Out For (Risks)</h4>
+                    <ul class="space-y-4 text-gray-700">
+                        <li class="flex items-start"><span class="text-2xl mr-3">📈</span><div><strong class="font-semibold">Limited Growth:</strong> You trade high growth potential for income; don't expect common stock-like gains.</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">⚖️</span><div><strong class="font-semibold">Interest Rate Risk:</strong> If rates rise, the value of your fixed-dividend shares will likely fall.</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">🗳️</span><div><strong class="font-semibold">No Voice:</strong> You generally give up voting rights, so you have no say in company decisions.</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">🔄</span><div><strong class="font-semibold">Reinvestment Risk:</strong> Companies can "call" or redeem shares, forcing you to reinvest, possibly at lower rates.</div></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="types" class="mb-24">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-accent-purple">A Spectrum of Choices</h3>
+                <p class="text-gray-600 max-w-xl mx-auto">Not all preferreds are the same. This chart shows the trade-off: features that benefit investors usually mean a lower yield, and vice-versa.</p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <div class="chart-container">
+                    <canvas id="typesChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="issuance" class="mb-12">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-accent-purple">Why Do Companies Issue It?</h3>
+                <p class="text-gray-600 max-w-xl mx-auto">It's a strategic move. Companies use preferred stock to raise money while cleverly managing control, finances, and risk.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-4xl mb-3">👑</div>
+                    <h4 class="text-xl font-bold text-accent-purple mb-2">Keep Control</h4>
+                    <p class="text-sm text-gray-600">Raise capital without giving up voting rights and diluting the control of existing owners.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-4xl mb-3">📊</div>
+                    <h4 class="text-xl font-bold text-accent-purple mb-2">Look Good on Paper</h4>
+                    <p class="text-sm text-gray-600">It's equity, not debt. This keeps the debt-to-equity ratio low, making the company look financially healthier.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-4xl mb-3">⏸️</div>
+                    <h4 class="text-xl font-bold text-accent-purple mb-2">Stay Flexible</h4>
+                    <p class="text-sm text-gray-600">Unlike bond interest, companies can pause dividend payments in tough times without defaulting.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer class="bg-accent-purple text-white mt-16">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>This infographic is for educational purposes only and is not financial advice.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const wrapLabel = (label) => {
+                const maxLen = 16;
+                if (label.length <= maxLen) return label;
+                const words = label.split(' ');
+                let lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if ((currentLine + ' ' + word).trim().length > maxLen) {
+                        lines.push(currentLine.trim());
+                        currentLine = word;
+                    } else {
+                        currentLine = (currentLine + ' ' + word).trim();
+                    }
+                }
+                if (currentLine) lines.push(currentLine.trim());
+                return lines;
+            };
+
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                return Array.isArray(label) ? label.join(' ') : label;
+            };
+
+            const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+            new Chart(comparisonCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Risk Level', 'Income Stability', 'Growth Potential'],
+                    datasets: [
+                        {
+                            label: 'Bonds',
+                            data: [2, 9, 2],
+                            backgroundColor: '#00AEEF',
+                        },
+                        {
+                            label: 'Preferred Stock',
+                            data: [4, 7, 4],
+                            backgroundColor: '#662D91',
+                        },
+                        {
+                            label: 'Common Stock',
+                            data: [9, 2, 9],
+                            backgroundColor: '#EC008C',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            ticks: {
+                                stepSize: 2
+                            },
+                            title: {
+                                display: true,
+                                text: 'Relative Score (Higher is More)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Asset Comparison: Risk, Income, and Growth',
+                            font: { size: 16 },
+                            padding: { bottom: 20 }
+                        },
+                        tooltip: { callbacks: { title: tooltipTitleCallback } }
+                    }
+                }
+            });
+
+            const typesCtx = document.getElementById('typesChart').getContext('2d');
+            new Chart(typesCtx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        wrapLabel('Callable (Benefits Company)'),
+                        wrapLabel('Non-Cumulative (Benefits Company)'),
+                        wrapLabel('Convertible (Benefits Investor)'),
+                        wrapLabel('Cumulative (Benefits Investor)')
+                    ],
+                    datasets: [{
+                        label: 'Typical Yield',
+                        data: [8, 7, 4, 3],
+                        backgroundColor: (context) => {
+                            const label = context.chart.data.labels[context.dataIndex];
+                            if (Array.isArray(label) ? label.join(' ').includes('Company') : label.includes('Company')) {
+                                return '#EC008C';
+                            }
+                            return '#00AEEF';
+                        },
+                        borderColor: 'rgba(255, 255, 255, 0.8)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Higher Yield →'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'The Yield Trade-Off: Investor vs. Company Benefits',
+                            font: { size: 16 },
+                            padding: { bottom: 20 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: tooltipTitleCallback,
+                                label: function(context) {
+                                    const type = context.label.includes('Callable') ? 'Company can redeem shares, creating reinvestment risk for you.' :
+                                                 context.label.includes('Non-Cumulative') ? 'If the company misses a dividend, it\'s gone forever.' :
+                                                 context.label.includes('Convertible') ? 'You can convert shares to common stock for growth potential.' :
+                                                 'Missed dividends must be paid back before common shareholders get anything.';
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
